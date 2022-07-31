@@ -1,7 +1,10 @@
+from crypt import methods
 from flask import Flask, render_template, url_for
+from forms import RegistrationForm, LoginForm
 
 app = Flask(__name__)
 
+app.config['SECRET_KEY'] = '760be9e130b66f380a1d4430d42c91fa'
 posts = [
     {
         'author' : 'Donatello', 
@@ -30,6 +33,15 @@ def about():
     var = 'Omar'
     return render_template('about.html', title='about')
 
+@app.route("/register", methods=['GET', 'POST'])
+def register():
+    form = RegistrationForm()
+    return render_template('register.html', title='Register', form = form)
+    
+@app.route("/login")
+def login():
+    form = LoginForm()
+    return render_template('login.html', title='login', form = form)
 
 
 if __name__ == '__main__':
