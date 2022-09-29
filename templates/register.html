@@ -59,7 +59,7 @@
                         <div class="invalid-feedback">
                             {% for error in form.confirm_password.errors %}
                                 {% if error == 'Field must be equal to password.' %}
-                                    {% set error = 'Password do not match!'%}
+                                    {% set error = 'Password does not match!'%}
                                 {%endif%}
                                 <span>
                                     {{ error }}

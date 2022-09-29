@@ -8,16 +8,16 @@ app.config['SECRET_KEY'] = '760be9e130b66f380a1d4430d42c91fa'
 posts = [
     {
         'author' : 'Donatello', 
-        'title' : 'Blog Post 1', 
-        'content' : 'First post content', 
+        'title' : 'I am the brain =)', 
+        'content' : 'Purle is my favorite color', 
         'date_posted' : '12 April 1994'
 
     },
 
         {
         'author' : 'Leanardo', 
-        'title' : 'Blog Post 2', 
-        'content' : 'Second post content', 
+        'title' : 'Hey Captain!', 
+        'content' : 'I love my brothers', 
         'date_posted' : '13 July 1995'
 
     }
@@ -31,7 +31,7 @@ def home():
 @app.route("/about")
 def about():
     var = 'Omar'
-    return render_template('about.html', title='about')
+    return render_template('about.html', title='About')
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
@@ -44,7 +44,7 @@ def register():
 @app.route("/login",  methods=['GET', 'POST'])
 def login():
     form = LoginForm()
-    return render_template('login.html', title='login', form = form)
+    return render_template('login.html', title='Login', form = form)
 
 
 if __name__ == '__main__':
