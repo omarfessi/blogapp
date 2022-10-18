@@ -34,8 +34,8 @@ db = SQLAlchemy(app)
 #     }
 # ]
 
-class User(db.Model):
-    __tablename__ = 'blog_user'
+class Users(db.Model):
+    __tablename__ = 'blog_users'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20),unique=True, nullable=True)
     email = db.Column(db.String(120),unique=True, nullable=True)
@@ -45,19 +45,20 @@ class User(db.Model):
     def __repr__(self) -> str:
         return f"User('{self.username}', '{self.email}','{self.password}')"
 
-class Post(db.Model):
-    __tablename__ = 'blog_post'
+class Posts(db.Model):
+    __tablename__ = 'blog_posts'
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(20), nullable=True)
     posted_on = db.Column(db.DateTime, nullable = False, default= datetime.utcnow)
     content = db.Column(db.Text, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('blog_user.id'), nullable = False)
+    user_id = db.Column(db.Integer, db.ForeignKey('blog_users.id'), nullable = False)
     def __repr__(self) -> str:
         return f"User('{self.title}', '{self.posted_on}','{self.content}')"
 
 @app.route("/")
 @app.route("/home")
 def home():
+    posts = Posts.query.all()
     return render_template('home.html', posts=posts)
 
 @app.route("/about")
@@ -86,5 +87,5 @@ def login():
     return render_template('login.html', title='Login', form = form)
 
 
-if __name__ == '__main__':
-    app.run(debug=True) 
+# if __name__ == '__main__':
+#     app.run(debug=True) 
