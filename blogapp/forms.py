@@ -29,3 +29,8 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     remember = BooleanField('Remember Me')
     submit = SubmitField('Log In')
+    def validate_email(self, email):
+        user = Users.query.filter_by(email=email.data).first()
+        if not user:
+            raise ValidationError(f'The following email address : {email.data} does not exist. Please log in with a valid one or register for a new account')
+
