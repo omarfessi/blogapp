@@ -10,6 +10,10 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 bcrypt=Bcrypt(app)
 login_manager = LoginManager(app)
+#in order for the LoginManager extention to know where a user login we need to specify it here
+login_manager.login_view = 'login'
+login_manager.login_message='Please log in in order to access you account page'
+login_manager.login_message_category='info'
 
 from blogapp import routes
 
