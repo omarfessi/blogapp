@@ -8,11 +8,13 @@ from blogapp.forms import RegistrationForm, LoginForm
 
 @app.route("/")
 @app.route("/home")
+@login_required
 def home():
     posts = Posts.query.all()
     return render_template('home.html', posts=posts)
 
 @app.route("/about")
+@login_required
 def about():
     var = 'Omar'
     return render_template('about.html', title='About')
@@ -50,6 +52,7 @@ def login():
     return render_template('login.html', title='Login', form = form)
 
 @app.route("/logout")
+@login_required
 def logout():
     if current_user.is_authenticated:
         logout_user()
@@ -59,4 +62,5 @@ def logout():
 @app.route("/account")
 @login_required
 def account():
-    return render_template('account.html', title='Account')
+    image_file = url_for('static', filename= 'profile_pics/' + current_user.image_file)
+    return render_template('account.html', title='Account', image_file = image_file)
