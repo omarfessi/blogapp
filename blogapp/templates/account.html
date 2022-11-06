@@ -7,7 +7,7 @@
       <p class="text-secondary">{{current_user.email}}</p>
     </div>
   </div>
-  <form method="POST" action="">
+  <form method="POST" action="" enctype="multipart/form-data">
     {{ form.csrf_token }}
     <fieldset class="form-group">
       <legend class="border-bottom mb4">Update Account Information !</legend>
@@ -34,6 +34,16 @@
         </div>
         {% else %} {{form.email(class="form-control form-control-lg")}} {%
         endif%}
+      </div class="form-group">
+        {{form.profile_picture.label()}}
+        {{form.profile_picture(class="form-control-file")}}
+        {% if form.profile_picture.errors%}
+            {% for error in form.profile_picture.errors %}
+                <span class="text-danger"> {{ error }}</span></br>
+            {% endfor %}
+        {% endif %}
+      <div>
+
       </div>
     </fieldset>
 
