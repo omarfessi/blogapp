@@ -27,7 +27,7 @@ def register():
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         print(len(hashed_password))
-        user = Users(username=form.username.data, email=form.email.data, password=hashed_password)
+        user = Users(username=form.username.data.capitalize(), email=form.email.data.lower(), password=hashed_password)
         db.session.add(user)
         db.session.commit()
         flash('Welcome {}! Your account has been created'.format(form.username.data), 'success')
@@ -40,7 +40,7 @@ def login():
         return(redirect(url_for('home')))
     form = LoginForm()
     if form.validate_on_submit():
-        user = Users.query.filter_by(email=form.email.data).first()
+        user = Users.query.filter_by(email=form.email.data.lower()).first()
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
@@ -64,15 +64,15 @@ def logout():
 def account():
     form = UpdateAccountForm()
     if form.validate_on_submit():
-        if form.username.data != current_user.username or form.email.data != current_user.email:
-            current_user.username=form.username.data
-            current_user.email=form.email.data
+        if form.username.data.capitalize() != current_user.username.capitalize() or form.email.data.lower() != current_user.email.lower():
+            current_user.username=form.username.data.capitalize()
+            current_user.email=form.email.data.lower()
             db.session.commit()
             flash('Your account has been updated!', 'success')
         else : flash('No Changes detected!', 'info')
         return redirect(url_for('account'))
     elif request.method =='GET':
-        form.username.data=current_user.username
-        form.email.data=current_user.email
+        form.username.data=current_user.username.capitalize()
+        form.email.data=current_user.email.lower()
     image_file = url_for('static', filename= 'profile_pics/' + current_user.image_file)
     return render_template('account.html', title='Account', form=form, image_file = image_file)
