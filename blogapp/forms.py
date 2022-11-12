@@ -1,7 +1,7 @@
 from xml.dom import ValidationErr
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
-from wtforms import StringField, PasswordField, SubmitField, BooleanField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 
 from blogapp.models import Users
@@ -53,4 +53,8 @@ class UpdateAccountForm(FlaskForm):
             user = Users.query.filter_by(email=email.data).first()
             if user:
                 raise ValidationError(f'The following email address : {email.data} is already taken. Please choose another one')
-    
+
+class CreateNewPostForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired(), Length(min=2, max=20)])
+    content = TextField('Content', validators=[DataRequired()])
+    submit = SubmitField('Create Post')

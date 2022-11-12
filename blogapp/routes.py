@@ -5,7 +5,7 @@ from flask import render_template, url_for, flash, redirect, request
 from flask_login import login_user, current_user, logout_user, login_required
 from blogapp import app, db, bcrypt
 from blogapp.models import Users, Posts
-from blogapp.forms import RegistrationForm, LoginForm, UpdateAccountForm
+from blogapp.forms import RegistrationForm, LoginForm, UpdateAccountForm, CreateNewPostForm
 
 
 @app.route("/")
@@ -93,3 +93,11 @@ def account():
         form.email.data=current_user.email.lower()
     image_file = url_for('static', filename= 'profile_pics/' + current_user.image_file)
     return render_template('account.html', title='Account', form=form, image_file = image_file)
+
+@app.route("/posts/new",  methods=['GET', 'POST'])
+@login_required
+def create_post():
+    form = CreateNewPostForm()
+    if form.validate_on_submit():
+        flash('Your post has been created !', 'success')
+    return render_template('create_post.html', form=form, title='New Post')
