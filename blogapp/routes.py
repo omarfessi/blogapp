@@ -97,7 +97,13 @@ def account():
 @app.route("/posts/new",  methods=['GET', 'POST'])
 @login_required
 def create_post():
+    
     form = CreateNewPostForm()
     if form.validate_on_submit():
+        post = Posts(title=form.title.data, content=form.content.data, user_id=current_user.id)
+        db.session.add(post)
+        db.session.commit()
         flash('Your post has been created !', 'success')
+        return redirect(url_for("home"))
+
     return render_template('create_post.html', form=form, title='New Post')
