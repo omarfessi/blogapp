@@ -1,11 +1,11 @@
 import os
 import secrets
 from PIL import Image
-from flask import render_template, url_for, flash, redirect, request
+from flask import render_template, url_for, flash, redirect, request, abort
 from flask_login import login_user, current_user, logout_user, login_required
 from blogapp import app, db, bcrypt
 from blogapp.models import Users, Posts
-from blogapp.forms import RegistrationForm, LoginForm, UpdateAccountForm, CreateNewPostForm
+from blogapp.forms import RegistrationForm, LoginForm, UpdateAccountForm, CreateNewPostForm, UpdatePostForm
 
 
 @app.route("/")
@@ -97,7 +97,6 @@ def account():
 @app.route("/posts/new",  methods=['GET', 'POST'])
 @login_required
 def create_post():
-    
     form = CreateNewPostForm()
     if form.validate_on_submit():
         post = Posts(title=form.title.data, content=form.content.data, user_id=current_user.id)
@@ -107,3 +106,40 @@ def create_post():
         return redirect(url_for("home"))
 
     return render_template('create_post.html', form=form, title='New Post')
+
+@app.route("/posts/<int:id>",  methods=['GET', 'POST'])
+def post(id):
+    post = Posts.query.get_or_404(id)
+    return render_template('post.html', title=post.title, post=post)
+
+@app.route("/posts/<int:id>/update",  methods=['GET', 'POST'])
+@login_required
+def update_post(id):
+    post = Posts.query.get_or_404(id)
+    if current_user != post.author :
+        abort(403)
+        return redirect(url_for("home"))
+    else :
+        form = UpdatePostForm()
+        if form.validate_on_submit():
+            post.title = form.title.data
+            post.content = form.content.data
+            db.session.commit()
+            flash('Your post has been updated !', 'success')
+            return redirect(url_for("post", id=post.id))
+        elif request.method =='GET':
+            form.title.data=post.title
+            form.content.data=post.content
+    return render_template('create_post.html', form=form, title='Update Post')
+
+@app.route("/posts/<int:id>/delete",  methods=['GET', 'POST'])
+@login_required
+def delete_post(id):
+    post = Posts.query.get_or_404(id)
+    if current_user != post.author :
+        abort(403)
+        return redirect(url_for("home"))
+    db.session.delete(post)
+    db.session.commit()
+    flash('Your post has been deleted !', 'success')
+    return redirect(url_for("home"))
