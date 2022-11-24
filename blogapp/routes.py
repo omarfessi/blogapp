@@ -144,3 +144,13 @@ def delete_post(id):
     db.session.commit()
     flash('Your post has been deleted !', 'success')
     return redirect(url_for("home"))
+
+@app.route("/user/<string:username>")
+@login_required
+def user_posts(username):
+    page = request.args.get('page', 1, type=int)
+    user = Users.query.filter_by(username=username).first_or_404(description='There is no username that matches {}'.format(username))
+    posts = Posts.query.filter_by(author=user)\
+            .order_by(Posts.posted_on.desc())\
+            .paginate(page, per_page=2)
+    return render_template('user_posts.html', posts=posts, user=user)
