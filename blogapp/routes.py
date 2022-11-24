@@ -12,7 +12,8 @@ from blogapp.forms import RegistrationForm, LoginForm, UpdateAccountForm, Create
 @app.route("/home")
 @login_required
 def home():
-    posts = Posts.query.all()
+    page = request.args.get('page', 1, type=int)
+    posts = Posts.query.paginate(page, per_page=2)
     return render_template('home.html', posts=posts)
 
 @app.route("/about")
