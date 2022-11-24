@@ -13,7 +13,7 @@ from blogapp.forms import RegistrationForm, LoginForm, UpdateAccountForm, Create
 @login_required
 def home():
     page = request.args.get('page', 1, type=int)
-    posts = Posts.query.paginate(page, per_page=2)
+    posts = Posts.query.order_by(Posts.posted_on.desc()).paginate(page, per_page=2)
     return render_template('home.html', posts=posts)
 
 @app.route("/about")
