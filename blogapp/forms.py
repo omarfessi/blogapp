@@ -58,7 +58,21 @@ class CreateNewPostForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired(), Length(min=2, max=20)])
     content = TextField('Content', validators=[DataRequired()])
     submit = SubmitField('Create Post')
+
 class UpdatePostForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired(), Length(min=2, max=20)])
     content = TextField('Content', validators=[DataRequired()])
     submit = SubmitField('Update Post')
+
+class RequestTokenForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    submit = SubmitField('Reset Password')
+    def validate_email(self, email):
+        user = Users.query.filter_by(email=email.data.lower()).first()
+        if not user:
+            raise ValidationError(f'The following email address : {email.data} does not exist.')
+
+class ResetPasswordForm(FlaskForm):
+    password = PasswordField('Password', validators=[DataRequired()])
+    confirm_password = PasswordField('Confirm Password',validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Reset Password')
