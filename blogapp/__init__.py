@@ -23,8 +23,8 @@ app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
 app.config['MAIL_USE_SSL'] = True
 app.config['MAIL_USERNAME'] = os.environ.get('EMAIL_USERNAME')
+# the password is you app password that is generated automatically and not your real password ( follow this tuto https://www.youtube.com/watch?v=Jp9B0rY6Fxk&t=1s)
 app.config['MAIL_PASSWORD'] =os.environ.get('EMAIL_PASSWORD')
-
 mail =  Mail(app)
 
 from blogapp import routes
